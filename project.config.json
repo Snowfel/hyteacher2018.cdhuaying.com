@@ -1,0 +1,13 @@
+{
+  "description": "Huaying Teacher 2018",
+  "setting": {
+    "urlCheck": true,
+    "es6": false,
+    "postcss": false,
+    "minified": false
+  },
+  "compileType": "miniprogram",
+  "appid": "wx3f95c6d5d8487e13",
+  "projectname": "hyteacher2018",
+  "miniprogramRoot": "./dist"
+}
