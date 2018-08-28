@@ -1,37 +1,37 @@
 <style lang="less">
   .panel {
-    width: 100%;
-    margin-top: 20rpx;
+    height: 100%;
+    position: fixed;
+    display:flex;
     text-align: left;
     font-size: 12px;
-    padding-top: 20rpx;
-    padding-left: 50rpx;
-    padding-bottom: 20rpx;
-    border: 1px solid #ccc;
-
-    .title {
-      padding-bottom: 20rpx;
-      font-size: 14px;
-      font-weight: bold;
+    flex-direction:column;
+    .content {
+      width: 100%;
+      height: 100%;
+      position: fixed;
+      display:flex;
+      text-align: left;
+      font-size: 12px;
+      background-repeat: no-repeat;
+      background-size:100% 100%;
+      flex-direction:column;
     }
-    .info {
-      padding: 15rpx;
-    }
-    .testcounter {
-      margin-top: 15rpx;
+    .btn-next-question {
+      border: 2px solid #ff0;
+      width: 100%;
       position: absolute;
+
     }
-    .counterview {
-      margin-left: 120rpx;
+    .m-teacher {
+      border: 2px solid #ff0;
+      position: absolute;
     }
   }
 </style>
 <template>
   <view class="panel">
-    <slot name="title">
-      Title
-    </slot>
-    <slot>
+    <slot name="content">
     </slot>
   </view>
 </template>
