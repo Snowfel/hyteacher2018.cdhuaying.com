@@ -26,6 +26,7 @@
     .m-teacher {
       border: 2px solid #ff0;
       position: absolute;
+      left: 41%;
     }
   }
 </style>

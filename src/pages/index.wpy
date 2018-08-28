@@ -5,11 +5,11 @@
     <panel>
       <view class="content" slot="content" style="background-image: url({{pBackgroundImg}})">
         <view @tap="nextQuestion" class="btn-next-question" size="mini" style="height: {{btnNextHeight}}%; top: {{btnNextPosition}}%;"></view>
-        <view class="field clearfix m-teacher" style="display: {{inputTeacherDisplay}};">
-          <input type="text" id="teachername" name="teachername" class="teacher-input" placeholder="" maxlength="12" style="height: {{inputTeacherNameHeight}}%; top: {{inputTeacherNameTop}}%;" />
+        <view class="clearfix m-teacher" style="display: {{inputTeacherDisplay}}; height: {{inputTeacherNameHeight}}%; top: {{inputTeacherNameTop}}%;">
+          <input type="text" id="teachername" name="teachername" class="teacher-input" maxlength="8" auto-focus />
         </view>
-        <view class="field clearfix m-teacher" style="display: {{inputTeacherDisplay}};">
-          <input type="text" id="teacherword" name="teacherword" class="teacher-input" placeholder="" maxlength="120" style="height: {{inputTeacherWordHeight}}%; top: {{inputTeacherWordTop}}%;" />
+        <view class="clearfix m-teacher" style="display: {{inputTeacherDisplay}}; height: {{inputTeacherWordHeight}}%; top: {{inputTeacherWordTop}}%;">
+          <text id="teacherword" name="teacherword" class="teacher-input"></text>
         </view>
       </view>
     </panel>
@@ -110,58 +110,57 @@
     onLoad() {
       this.funcChangeImg(1)
     }
-    funcChangeImg(name) {
-      var i = name
-      var btntop = 78
+    funcChangeImg(i) {
+      var btnTop = 78
       var btnheight = 20
-      var iTeacherDisplay = 'none'
+      var iTeachDisplay = 'none'
       var iTeacherNameTop = 0
       var iTeacherNameHeight = 0
       var iTeacherWordTop = 0
       var iTeacherWordHeight = 0
-      var bgImg = 'https://www.huaying.info/statics/images/hyteacher2018/' + i + '.gif'
       if (i === 1) {
-        btntop = 79
+        btnTop = 79
         btnheight = 15
       } else if (i === 2) {
-        btntop = 54
+        btnTop = 54
         btnheight = 36
       } else if (i === 3) {
-        btntop = 53
+        btnTop = 53
         btnheight = 37
       } else if (i === 4) {
-        btntop = 6
+        btnTop = 6
         btnheight = 36
       } else if (i === 5) {
-        btntop = 52
+        btnTop = 52
         btnheight = 36
       } else if (i === 6) {
-        btntop = 49
+        btnTop = 49
         btnheight = 36
       } else if (i >= 7 && i <= 10) {
-        btntop = 79
+        btnTop = 79
         btnheight = 12
       } else if (i === 11) {
-        btntop = 82
+        btnTop = 82
         btnheight = 11
-      } else if (i === 11) {
-        btntop = 82
+        iTeachDisplay = ''
+        iTeacherNameTop = 65
+        iTeacherNameHeight = 4
+        iTeacherWordTop = 70
+        iTeacherWordHeight = 8
+      } else if (i === 12) {
+        btnTop = 100
         btnheight = 11
-        iTeacherDisplay = 'block'
-        iTeacherNameTop = 60
-        iTeacherNameHeight = 5
-        iTeacherWordTop = 65
-        iTeacherWordHeight = 5
       } else {
-        btntop = 100
+        btnTop = 100
         btnheight = 12
       }
       console.log(iTeacherNameTop)
+      var bgImg = 'https://www.huaying.info/statics/images/hyteacher2018/' + i + '.gif'
       this.setData({
         pBackgroundImg: bgImg,
-        btnNextPosition: btntop,
+        btnNextPosition: btnTop,
         btnNextHeight: btnheight,
-        inputTeacherDisplay: iTeacherDisplay,
+        inputTeacherDisplay: iTeachDisplay,
         inputTeacherNameTop: iTeacherNameTop,
         inputTeacherNameHeight: iTeacherNameHeight,
         inputTeacherWordTop: iTeacherWordTop,
