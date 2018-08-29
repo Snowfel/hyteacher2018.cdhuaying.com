@@ -179,6 +179,7 @@
       this.funcChangeImg(1)
     }
     funcChangeImg(i) {
+      let self = this
       var btnTop = 100
       var btnheight = 20
       var iTeachDisplay = 'none'
@@ -227,20 +228,19 @@
         btnTop = 100
         submitTop = 66.5
         iStuDisplay = ''
-        iStudentNameTop = 50.4
+        iStudentNameTop = 50.6
         iStudentNameHeight = 4
-        iCellphoneTop = 55.6
+        iCellphoneTop = 55.8
         iCellphoneHeight = 4
-        iSchoolTop = 60.8
+        iSchoolTop = 61
         iSchoolHeight = 4
       } else {
         btnTop = 100
         btnheight = 12
       }
       var bgImg = 'https://www.huaying.info/statics/images/hyteacher2018/' + i + '.gif'
-      this.setData({
+      self.setData({
         pBackgroundImg: bgImg,
-        btnNextPosition: btnTop,
         btnNextHeight: btnheight,
         inputTeacherDisplay: iTeachDisplay,
         inputTeacherNameTop: iTeacherNameTop,
@@ -256,6 +256,12 @@
         inputSchoolHeight: iSchoolHeight,
         btnSubmitTop: submitTop
       })
+      setTimeout(() => {
+        self.setData({
+          btnNextPosition: btnTop
+        })
+        console.log(btnTop)
+      }, 1000)
     }
 
     funcTeacherRequest(a, b) {
