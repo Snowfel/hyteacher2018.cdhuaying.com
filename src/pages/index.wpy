@@ -110,6 +110,13 @@
             this.goNext = false
             if (this.valTeacherName !== '' && this.valTeacherWord !== '') {
               this.funcTeacherRequest(this.valTeacherName, this.valTeacherWord)
+              let promise = this.$invoke('toast', 'show', {
+                title: '信息提交中，马上进入下页！',
+                img: 'https://raw.githubusercontent.com/kiinlam/wetoast/master/images/star.png'
+              })
+              promise.then((d) => {
+                console.log('提示：你的信息提交成功！')
+              })
             } else {
               let promise2 = this.$invoke('toast', 'show', {
                 title: '请填写老师称呼与老师的话！',
@@ -220,11 +227,11 @@
         btnTop = 100
         submitTop = 66.5
         iStuDisplay = ''
-        iStudentNameTop = 50
+        iStudentNameTop = 50.4
         iStudentNameHeight = 4
-        iCellphoneTop = 55.4
+        iCellphoneTop = 55.6
         iCellphoneHeight = 4
-        iSchoolTop = 60.6
+        iSchoolTop = 60.8
         iSchoolHeight = 4
       } else {
         btnTop = 100
