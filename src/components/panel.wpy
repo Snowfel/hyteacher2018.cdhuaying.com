@@ -25,6 +25,7 @@
 
     }
     .btn-next-start {
+      border:0;
       width: 61%;
       left: 22%;
       position: absolute;
@@ -56,6 +57,7 @@
       }
     }
     .btn-submit {
+      border:0;
       width: 22%;
       left: 50%;
       height: 5%;
