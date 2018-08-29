@@ -19,14 +19,37 @@
     }
     .btn-next-question {
       border: 2px solid #ff0;
-      width: 100%;
+      width: 80%;
+      left: 10%;
+      right:10%;
       position: absolute;
+
+    }
+    .btn-next-start {
+      border: 2px solid #ff0;
+      width: 80%;
+      left: 10%;
+      right:10%;
+      position: absolute;
+      background:none;
 
     }
     .m-teacher {
       border: 2px solid #ff0;
       position: absolute;
       left: 41%;
+      right:20%;
+      input {
+        margin-top: 6rpx;
+        font-size: 32rpx;
+        line-height:45rpx;
+      }
+      textarea {
+        width:100%;/*自动适应父布局宽度*/
+        height: 100%;
+        overflow:auto;
+        word-break:break-all;
+      }
     }
   }
 </style>

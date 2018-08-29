@@ -4,13 +4,15 @@
   <view class="container">
     <panel>
       <view class="content" slot="content" style="background-image: url({{pBackgroundImg}})">
+
         <view @tap="nextQuestion" class="btn-next-question" size="mini" style="height: {{btnNextHeight}}%; top: {{btnNextPosition}}%;"></view>
         <view class="clearfix m-teacher" style="display: {{inputTeacherDisplay}}; height: {{inputTeacherNameHeight}}%; top: {{inputTeacherNameTop}}%;">
-          <input type="text" id="teachername" name="teachername" class="teacher-input" maxlength="8" auto-focus />
+          <input type="text" id="teachername" name="teachername" class="teacher-input" maxlength="8" value="{{teacherName}}" @input="bindTextTeacherName" />
         </view>
         <view class="clearfix m-teacher" style="display: {{inputTeacherDisplay}}; height: {{inputTeacherWordHeight}}%; top: {{inputTeacherWordTop}}%;">
-          <text id="teacherword" name="teacherword" class="teacher-input"></text>
+          <textarea placeholder="如：你们都看好我要变形了" name="teacherword" maxlength="39" value="{{teacherWord}}" @input="bindTextTeacherWord" />
         </view>
+        <button class="btn-next-start" open-type="getUserInfo" lang="zh_CN" bindgetuserinfo="onGotUserInfo" style="height: 20%; top: 78%; display: {{getUserInfoDisplay}}">获取用户信息</button>
       </view>
     </panel>
   </view>
@@ -51,10 +53,18 @@
 
     data = {
       index: 1,
+      goNext: true,
+      pk: '',
+      valTeacherName: '',
+      valTeacherWord: '',
       mynum: 0,
+      getUserInfoDisplay: '',
       userInfo: {
-        nickName: '加载中...'
-      }
+        nickName: '',
+        avatarUrl: ''
+      },
+      auth: '63bef7f4-0e05-58ab-24f4-113dcd379dd3',
+      handleurl: 'https://www.huaying.info/Home/Index/hyTeacherHandle.html'
     }
 
     computed = {
@@ -70,33 +80,44 @@
       tap () {
         console.log('do noting from ' + this.$name)
       },
-      nextQuestion() {
+      bindTextTeacherName (e) {
+        this.valTeacherName = e.detail.value
+      },
+      bindTextTeacherWord (e) {
+        this.valTeacherWord = e.detail.value
+      },
+      nextQuestion (e) {
         if (this.index <= 12) {
-          this.index++
-          if (this.index === 7) {
-            var numPool = [ 7, 8, 9, 10 ]
-            this.index = numPool[Math.floor(Math.random() * numPool.length)]
-          } else if (this.index > 7 && this.index <= 10) {
-            this.index = 11
-          } else {
+          if (this.index === 11) {
+            this.goNext = false
+            if (this.valTeacherName !== '' && this.valTeacherWord !== '') {
+              this.funcTeacherRequest(this.valTeacherName, this.valTeacherWord)
+              if (this.pk !== '') {
+                this.goNext = true
+                this.nextQuestion(12)
+              }
+            }
           }
-          console.log(this.index)
-          this.funcChangeImg(this.index)
+          if (this.goNext) {
+            this.index++
+            if (this.index === 7) {
+              var numPool = [ 7, 8, 9, 10 ]
+              this.index = numPool[Math.floor(Math.random() * numPool.length)]
+            } else if (this.index > 7 && this.index <= 10) {
+              this.index = 11
+            } else {
+            }
+            console.log(this.userInfo.nickName)
+            this.funcChangeImg(this.index)
+          }
         }
       },
-      request () {
-        let self = this
-        let i = 10
-        let map = ['MA==', 'MQo=', 'Mg==', 'Mw==', 'NA==', 'NQ==', 'Ng==', 'Nw==', 'OA==', 'OQ==']
-        while (i--) {
-          wepy.request({
-            url: 'https://www.huaying.info/Home/x/x/c/' + map[i] + '/i/' + i + '.html',
-            success: function (d) {
-              self.netrst += d.data + '.'
-              self.$apply()
-            }
-          })
-        }
+      onGotUserInfo (e) {
+        this.userInfo.nickName = e.detail.userInfo.nickName
+        this.userInfo.avatarUrl = e.detail.userInfo.avatarUrl
+        this.index++
+        this.funcChangeImg(this.index)
+        this.getUserInfoDisplay = 'none'
       }
     }
 
@@ -111,7 +132,7 @@
       this.funcChangeImg(1)
     }
     funcChangeImg(i) {
-      var btnTop = 78
+      var btnTop = 100
       var btnheight = 20
       var iTeachDisplay = 'none'
       var iTeacherNameTop = 0
@@ -119,7 +140,7 @@
       var iTeacherWordTop = 0
       var iTeacherWordHeight = 0
       if (i === 1) {
-        btnTop = 79
+        btnTop = 100
         btnheight = 15
       } else if (i === 2) {
         btnTop = 54
@@ -145,8 +166,8 @@
         iTeachDisplay = ''
         iTeacherNameTop = 65
         iTeacherNameHeight = 4
-        iTeacherWordTop = 70
-        iTeacherWordHeight = 8
+        iTeacherWordTop = 71
+        iTeacherWordHeight = 7
       } else if (i === 12) {
         btnTop = 100
         btnheight = 11
@@ -154,7 +175,6 @@
         btnTop = 100
         btnheight = 12
       }
-      console.log(iTeacherNameTop)
       var bgImg = 'https://www.huaying.info/statics/images/hyteacher2018/' + i + '.gif'
       this.setData({
         pBackgroundImg: bgImg,
@@ -166,6 +186,45 @@
         inputTeacherWordTop: iTeacherWordTop,
         inputTeacherWordHeight: iTeacherWordHeight
       })
+    }
+
+    funcTeacherRequest(a, b) {
+      let self = this
+      wepy.request({
+        header: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        url: this.handleurl,
+        method: 'POST',
+        data: { auth: this.auth, type: 'teacher', nickname: this.userInfo.nickName, avatarurl: this.userInfo.avatarUrl, name: a, word: b },
+        success: function (d) {
+          if (d.data.ret === 'success') {
+            self.pk = d.data.pk
+            self.$apply()
+          }
+        }
+      })
+    }
+
+    funcStudentRequest(a, b) {
+      wepy.request({
+        header: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        url: this.handleurl,
+        method: 'POST',
+        data: { auth: this.auth, type: 'student', nickname: this.userInfo.nickName, avatarurl: this.userInfo.avatarUrl, pk: this.pk, studentname: a, cellphone: b },
+        success: function (d) {
+          console.log(d.data)
+          if (d.statusCode === 200) {
+            if (d.data.ret === 'success') {
+              return true
+            } else {
+              return false
+            }
+          }
+        }
+      })
+    }
+
+    funcTap() {
+      return true
     }
   }
 </script>
