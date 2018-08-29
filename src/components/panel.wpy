@@ -18,7 +18,6 @@
       flex-direction:column;
     }
     .btn-next-question {
-      border: 2px solid #ff0;
       width: 80%;
       left: 10%;
       right:10%;
@@ -26,7 +25,6 @@
 
     }
     .btn-next-start {
-      border: 2px solid #ff0;
       width: 61%;
       left: 22%;
       position: absolute;
@@ -34,7 +32,6 @@
 
     }
     .m-teacher {
-      border: 2px solid #ff0;
       position: absolute;
       left: 41%;
       right:20%;
@@ -51,7 +48,6 @@
       }
     }
     .m-student {
-      border: 2px solid #ff0;
       position: absolute;
       left: 33%;
       right:29%;
@@ -60,7 +56,6 @@
       }
     }
     .btn-submit {
-      border: 2px solid #ff0;
       width: 22%;
       left: 50%;
       height: 5%;
