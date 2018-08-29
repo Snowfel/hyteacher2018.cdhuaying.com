@@ -27,9 +27,8 @@
     }
     .btn-next-start {
       border: 2px solid #ff0;
-      width: 80%;
-      left: 10%;
-      right:10%;
+      width: 61%;
+      left: 22%;
       position: absolute;
       background:none;
 
@@ -50,6 +49,23 @@
         overflow:auto;
         word-break:break-all;
       }
+    }
+    .m-student {
+      border: 2px solid #ff0;
+      position: absolute;
+      left: 33%;
+      right:29%;
+      input {
+        font-size: 28rpx;
+      }
+    }
+    .btn-submit {
+      border: 2px solid #ff0;
+      width: 22%;
+      left: 50%;
+      height: 5%;
+      position: absolute;
+      background:none;
     }
   }
 </style>

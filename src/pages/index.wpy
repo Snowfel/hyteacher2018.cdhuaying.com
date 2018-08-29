@@ -7,14 +7,26 @@
 
         <view @tap="nextQuestion" class="btn-next-question" size="mini" style="height: {{btnNextHeight}}%; top: {{btnNextPosition}}%;"></view>
         <view class="clearfix m-teacher" style="display: {{inputTeacherDisplay}}; height: {{inputTeacherNameHeight}}%; top: {{inputTeacherNameTop}}%;">
-          <input type="text" id="teachername" name="teachername" class="teacher-input" maxlength="8" value="{{teacherName}}" @input="bindTextTeacherName" />
+          <input type="text" name="teachername" class="teacher-input" maxlength="8" @input="bindTextTeacherName" />
         </view>
         <view class="clearfix m-teacher" style="display: {{inputTeacherDisplay}}; height: {{inputTeacherWordHeight}}%; top: {{inputTeacherWordTop}}%;">
-          <textarea placeholder="如：你们都看好我要变形了" name="teacherword" maxlength="39" value="{{teacherWord}}" @input="bindTextTeacherWord" />
+          <textarea placeholder="如：你们都看好我要变形了" name="teacherword" maxlength="39" @input="bindTextTeacherWord" />
         </view>
-        <button class="btn-next-start" open-type="getUserInfo" lang="zh_CN" bindgetuserinfo="onGotUserInfo" style="height: 20%; top: 78%; display: {{getUserInfoDisplay}}">获取用户信息</button>
+
+        <view class="clearfix m-student" style="display: {{inputStudentDisplay}}; height: {{inputStudentNameHeight}}%; top: {{inputStudentNameTop}}%;">
+          <input type="text" name="studentname" class="teacher-input" maxlength="8" @input="bindTextStudentName" />
+        </view>
+        <view class="clearfix m-student" style="display: {{inputStudentDisplay}}; height: {{inputCellphoneHeight}}%; top: {{inputCellphoneTop}}%;">
+          <input type="text" name="cellphone" class="teacher-input" maxlength="14" @input="bindTextCellphone" />
+        </view>
+        <view class="clearfix m-student" style="display: {{inputStudentDisplay}}; height: {{inputSchoolHeight}}%; top: {{inputSchoolTop}}%;">
+          <input type="text" name="school" class="teacher-input" maxlength="30" @input="bindTextSchool" />
+        </view>
+        <button class="btn-next-start" open-type="getUserInfo" lang="zh_CN" bindgetuserinfo="onGotUserInfo" style="height: 16%; top: 79%; display: {{getUserInfoDisplay}}"></button>
+        <button class="btn-submit" @tap="toast" size="mini" style="display: {{inputStudentDisplay}}; top: {{btnSubmitTop}}%;"></button>
       </view>
     </panel>
+    <toast />
   </view>
 </template>
 
@@ -52,12 +64,15 @@
     mixins = [testMixin]
 
     data = {
+      times: +new Date(),
       index: 1,
       goNext: true,
       pk: '',
       valTeacherName: '',
       valTeacherWord: '',
-      mynum: 0,
+      valStudentName: '',
+      valCellphone: '',
+      valSchool: '',
       getUserInfoDisplay: '',
       userInfo: {
         nickName: '',
@@ -74,17 +89,20 @@
     }
 
     methods = {
-      plus () {
-        this.mynum++
-      },
-      tap () {
-        console.log('do noting from ' + this.$name)
-      },
       bindTextTeacherName (e) {
         this.valTeacherName = e.detail.value
       },
       bindTextTeacherWord (e) {
         this.valTeacherWord = e.detail.value
+      },
+      bindTextStudentName (e) {
+        this.valStudentName = e.detail.value
+      },
+      bindTextCellphone (e) {
+        this.valCellphone = e.detail.value
+      },
+      bindTextSchool (e) {
+        this.valSchool = e.detail.value
       },
       nextQuestion (e) {
         if (this.index <= 12) {
@@ -92,10 +110,6 @@
             this.goNext = false
             if (this.valTeacherName !== '' && this.valTeacherWord !== '') {
               this.funcTeacherRequest(this.valTeacherName, this.valTeacherWord)
-              if (this.pk !== '') {
-                this.goNext = true
-                this.nextQuestion(12)
-              }
             }
           }
           if (this.goNext) {
@@ -105,7 +119,6 @@
               this.index = numPool[Math.floor(Math.random() * numPool.length)]
             } else if (this.index > 7 && this.index <= 10) {
               this.index = 11
-            } else {
             }
             console.log(this.userInfo.nickName)
             this.funcChangeImg(this.index)
@@ -118,6 +131,26 @@
         this.index++
         this.funcChangeImg(this.index)
         this.getUserInfoDisplay = 'none'
+      },
+      toast () {
+        if (this.valStudentName !== '' && this.valCellphone !== '') {
+          this.funcStudentRequest(this.valStudentName, this.valCellphone, this.valSchool)
+          let promise = this.$invoke('toast', 'show', {
+            title: '你的信息提交成功！',
+            img: 'https://raw.githubusercontent.com/kiinlam/wetoast/master/images/star.png'
+          })
+          promise.then((d) => {
+            console.log('toast done')
+          })
+        } else {
+          let promise2 = this.$invoke('toast', 'show', {
+            title: '请填写姓名与电话！',
+            img: 'https://raw.githubusercontent.com/kiinlam/wetoast/master/images/star.png'
+          })
+          promise2.then((d) => {
+            console.log('toast done')
+          })
+        }
       }
     }
 
@@ -139,6 +172,14 @@
       var iTeacherNameHeight = 0
       var iTeacherWordTop = 0
       var iTeacherWordHeight = 0
+      var iStuDisplay = 'none'
+      var iStudentNameTop = 100
+      var iStudentNameHeight = 4
+      var iCellphoneTop = 100
+      var iCellphoneHeight = 4
+      var iSchoolTop = 100
+      var iSchoolHeight = 4
+      var submitTop = 100
       if (i === 1) {
         btnTop = 100
         btnheight = 15
@@ -170,7 +211,14 @@
         iTeacherWordHeight = 7
       } else if (i === 12) {
         btnTop = 100
-        btnheight = 11
+        submitTop = 66.5
+        iStuDisplay = ''
+        iStudentNameTop = 50
+        iStudentNameHeight = 4
+        iCellphoneTop = 55.4
+        iCellphoneHeight = 4
+        iSchoolTop = 60.6
+        iSchoolHeight = 4
       } else {
         btnTop = 100
         btnheight = 12
@@ -184,7 +232,15 @@
         inputTeacherNameTop: iTeacherNameTop,
         inputTeacherNameHeight: iTeacherNameHeight,
         inputTeacherWordTop: iTeacherWordTop,
-        inputTeacherWordHeight: iTeacherWordHeight
+        inputTeacherWordHeight: iTeacherWordHeight,
+        inputStudentDisplay: iStuDisplay,
+        inputStudentNameTop: iStudentNameTop,
+        inputStudentNameHeight: iStudentNameHeight,
+        inputCellphoneTop: iCellphoneTop,
+        inputCellphoneHeight: iCellphoneHeight,
+        inputSchoolTop: iSchoolTop,
+        inputSchoolHeight: iSchoolHeight,
+        btnSubmitTop: submitTop
       })
     }
 
@@ -194,37 +250,33 @@
         header: { 'Content-Type': 'application/x-www-form-urlencoded' },
         url: this.handleurl,
         method: 'POST',
-        data: { auth: this.auth, type: 'teacher', nickname: this.userInfo.nickName, avatarurl: this.userInfo.avatarUrl, name: a, word: b },
+        data: { auth: this.auth, times: this.times, type: 'teacher', nickname: this.userInfo.nickName, avatarurl: this.userInfo.avatarUrl, name: a, word: b },
         success: function (d) {
           if (d.data.ret === 'success') {
             self.pk = d.data.pk
+            self.index++
             self.$apply()
+            self.funcChangeImg(self.index)
           }
         }
       })
     }
 
-    funcStudentRequest(a, b) {
+    funcStudentRequest(a, b, c) {
       wepy.request({
         header: { 'Content-Type': 'application/x-www-form-urlencoded' },
         url: this.handleurl,
         method: 'POST',
-        data: { auth: this.auth, type: 'student', nickname: this.userInfo.nickName, avatarurl: this.userInfo.avatarUrl, pk: this.pk, studentname: a, cellphone: b },
+        data: { auth: this.auth, times: this.times, type: 'student', nickname: this.userInfo.nickName, avatarurl: this.userInfo.avatarUrl, pk: this.pk, studentname: a, cellphone: b, school: c },
         success: function (d) {
           console.log(d.data)
-          if (d.statusCode === 200) {
-            if (d.data.ret === 'success') {
-              return true
-            } else {
-              return false
-            }
+          if (d.data.ret === 'success') {
+            return true
+          } else {
+            return false
           }
         }
       })
-    }
-
-    funcTap() {
-      return true
     }
   }
 </script>
