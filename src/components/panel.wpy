@@ -17,10 +17,15 @@
       background-size:100% 100%;
       flex-direction:column;
     }
+    .btn-prev-question {
+      width: 10%;
+      left: 8%;
+      height: 4.4%;
+      position: absolute;
+    }
     .btn-next-question {
       width: 80%;
       left: 10%;
-      right:10%;
       position: absolute;
 
     }
@@ -30,7 +35,6 @@
       left: 22%;
       position: absolute;
       background:none;
-
     }
     .m-teacher {
       position: absolute;
@@ -50,7 +54,7 @@
     }
     .m-student {
       position: absolute;
-      left: 33%;
+      left: 34%;
       right:29%;
       input {
         font-size: 28rpx;
@@ -59,10 +63,16 @@
     .btn-submit {
       border: none;
       width: 22%;
-      left: 50%;
+      left: 52.5%;
       height: 5%;
       position: absolute;
       background:none;
+    }
+    .btn-hover {
+      background-color: #fdae55;
+    }
+    button::after {
+      border: 0;
     }
   }
 </style>

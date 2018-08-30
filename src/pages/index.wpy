@@ -5,12 +5,13 @@
     <panel>
       <view class="content" slot="content" style="background-image: url({{pBackgroundImg}})">
 
+        <view @tap="prevQuestion" class="btn-prev-question" size="mini" style="top: {{btnPrevPosition}}%;"></view>
         <view @tap="nextQuestion" class="btn-next-question" size="mini" style="height: {{btnNextHeight}}%; top: {{btnNextPosition}}%;"></view>
         <view class="clearfix m-teacher" style="display: {{inputTeacherDisplay}}; height: {{inputTeacherNameHeight}}%; top: {{inputTeacherNameTop}}%;">
           <input type="text" name="teachername" class="teacher-input" maxlength="8" @input="bindTextTeacherName" />
         </view>
         <view class="clearfix m-teacher" style="display: {{inputTeacherDisplay}}; height: {{inputTeacherWordHeight}}%; top: {{inputTeacherWordTop}}%;">
-          <textarea placeholder="如：你们都看好我要变形了" name="teacherword" maxlength="39" @input="bindTextTeacherWord" />
+          <textarea placeholder="如：你们都看好我要变形了" name="teacherword" maxlength="52" @input="bindTextTeacherWord" />
         </view>
 
         <view class="clearfix m-student" style="display: {{inputStudentDisplay}}; height: {{inputStudentNameHeight}}%; top: {{inputStudentNameTop}}%;">
@@ -23,7 +24,7 @@
           <input type="text" name="school" class="teacher-input" maxlength="30" @input="bindTextSchool" />
         </view>
         <button class="btn-next-start" open-type="getUserInfo" lang="zh_CN" bindgetuserinfo="onGotUserInfo" style="height: 16%; top: 79%; display: {{getUserInfoDisplay}}"></button>
-        <button class="btn-submit" @tap="toast" size="mini" style="display: {{inputStudentDisplay}}; top: {{btnSubmitTop}}%;"></button>
+        <button class="btn-submit" @tap="toast" size="mini" hover-class="btn-hover" style="display: {{inputStudentDisplay}}; top: {{btnSubmitTop}}%;"></button>
       </view>
     </panel>
     <toast />
@@ -104,6 +105,10 @@
       bindTextSchool (e) {
         this.valSchool = e.detail.value
       },
+      prevQuestion (e) {
+        this.index = 11
+        this.funcChangeImg(this.index)
+      },
       nextQuestion (e) {
         if (this.index <= 12) {
           if (this.index === 11) {
@@ -172,8 +177,9 @@
           console.log(res.target)
         }
         return {
-          title: '自定义转发标题',
-          path: '/page/user?id=123'
+          title: 'word天！真的超准！测测你适合当什么老师',
+          path: '/page/index',
+          imageUrl: 'https://www.huaying.info/statics/images/hyteacher2018/front.jpg'
         }
       }
     }
@@ -190,8 +196,9 @@
     }
     funcChangeImg(i) {
       let self = this
-      var btnTop = 100
-      var btnheight = 20
+      var nextTop = 100
+      var prevtop = 100
+      var nextHeight = 20
       var iTeachDisplay = 'none'
       var iTeacherNameTop = 0
       var iTeacherNameHeight = 0
@@ -206,52 +213,54 @@
       var iSchoolHeight = 4
       var submitTop = 100
       if (i === 1) {
-        btnTop = 100
-        btnheight = 15
+        nextTop = 100
+        nextHeight = 15
       } else if (i === 2) {
-        btnTop = 54
-        btnheight = 36
+        nextTop = 54
+        nextHeight = 36
       } else if (i === 3) {
-        btnTop = 53
-        btnheight = 37
+        nextTop = 53
+        nextHeight = 37
       } else if (i === 4) {
-        btnTop = 6
-        btnheight = 36
+        nextTop = 6
+        nextHeight = 36
       } else if (i === 5) {
-        btnTop = 52
-        btnheight = 36
+        nextTop = 52
+        nextHeight = 36
       } else if (i === 6) {
-        btnTop = 49
-        btnheight = 36
+        nextTop = 49
+        nextHeight = 36
       } else if (i >= 7 && i <= 10) {
-        btnTop = 79
-        btnheight = 12
+        nextTop = 79
+        nextHeight = 12
       } else if (i === 11) {
-        btnTop = 82
-        btnheight = 11
+        nextTop = 82
+        nextHeight = 11
         iTeachDisplay = ''
-        iTeacherNameTop = 65
+        iTeacherNameTop = 65.1
         iTeacherNameHeight = 4
-        iTeacherWordTop = 71
-        iTeacherWordHeight = 7
+        iTeacherWordTop = 72.0
+        iTeacherWordHeight = 9.2
       } else if (i === 12) {
-        btnTop = 100
+        prevtop = 92
+        nextTop = 100
         submitTop = 66.5
         iStuDisplay = ''
-        iStudentNameTop = 50.6
+        iStudentNameTop = 48
         iStudentNameHeight = 4
-        iCellphoneTop = 55.8
+        iCellphoneTop = 54
         iCellphoneHeight = 4
-        iSchoolTop = 61
+        iSchoolTop = 60
         iSchoolHeight = 4
       } else {
-        btnTop = 100
-        btnheight = 12
+        nextTop = 100
+        nextHeight = 12
       }
       var bgImg = 'https://www.huaying.info/statics/images/hyteacher2018/' + i + '.gif'
       self.setData({
         pBackgroundImg: bgImg,
-        btnNextHeight: btnheight,
+        btnPrevPosition: prevtop,
+        btnNextHeight: nextHeight,
         inputTeacherDisplay: iTeachDisplay,
         inputTeacherNameTop: iTeacherNameTop,
         inputTeacherNameHeight: iTeacherNameHeight,
@@ -268,9 +277,9 @@
       })
       setTimeout(() => {
         self.setData({
-          btnNextPosition: btnTop
+          btnNextPosition: nextTop
         })
-        console.log(btnTop)
+        console.log(nextTop)
       }, 1000)
     }
 
