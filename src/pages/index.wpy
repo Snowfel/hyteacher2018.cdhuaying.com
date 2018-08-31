@@ -178,7 +178,7 @@
         }
         return {
           title: 'word天！真的超准！测测你适合当什么老师',
-          path: '/page/index',
+          path: '/pages/index',
           imageUrl: 'https://www.huaying.info/statics/images/hyteacher2018/front.gif'
         }
       }
