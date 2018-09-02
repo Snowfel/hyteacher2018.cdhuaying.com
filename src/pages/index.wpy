@@ -67,6 +67,7 @@
     data = {
       times: +new Date(),
       index: 1,
+      canClick: true,
       goNext: true,
       pk: '',
       valTeacherName: '',
@@ -110,7 +111,7 @@
         this.funcChangeImg(this.index)
       },
       nextQuestion (e) {
-        if (this.index <= 12) {
+        if (this.index <= 12 && this.canClick) {
           if (this.index === 11) {
             this.goNext = false
             if (this.valTeacherName !== '' && this.valTeacherWord !== '') {
@@ -179,7 +180,7 @@
         return {
           title: 'word天！真的超准！测测你适合当什么老师',
           path: '/pages/index',
-          imageUrl: 'https://www.huaying.info/statics/images/hyteacher2018/front.gif'
+          imageUrl: 'https://www.huaying.info/statics/images/hyteacher2018/front.png'
         }
       }
     }
@@ -257,6 +258,7 @@
         nextHeight = 12
       }
       var bgImg = 'https://www.huaying.info/statics/images/hyteacher2018/' + i + '.gif'
+      self.canClick = false
       self.setData({
         pBackgroundImg: bgImg,
         btnPrevPosition: prevtop,
@@ -279,7 +281,7 @@
         self.setData({
           btnNextPosition: nextTop
         })
-        console.log(nextTop)
+        self.canClick = true
       }, 1000)
     }
 
