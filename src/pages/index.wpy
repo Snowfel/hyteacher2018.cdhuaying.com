@@ -25,7 +25,9 @@
           </view>
           <button class="btn-next-start" open-type="getUserInfo" lang="zh_CN" bindgetuserinfo="onGotUserInfo" style="height: 16%; top: 79%; display: {{getUserInfoDisplay}}"></button>
           <button class="btn-submit" @tap="toast" size="mini" hover-class="btn-hover" style="display: {{inputStudentDisplay}}; top: {{btnSubmitTop}}%;"></button>
-          <button class="xxx" @tap="onDownShareImage"></button>
+          <view class="canvas-box" hidden="{{maskHidden}}"></view>
+          <canvas  style="width: 262px;height: 467px;" canvas-id="mycanvas"/>
+          <view class="save" hidden="{{maskHidden}}" @tap="onDownShareImage">点击保存图片</view>
         </view>
       </view>
     </panel>
@@ -84,8 +86,8 @@
       },
       auth: '63bef7f4-0e05-58ab-24f4-113dcd379dd3',
       handleurl: 'https://www.huaying.info/Home/Index/hyTeacherHandle.html',
-      localGoodsPicUrl: '',
-      localQrCodeUrl: 'https://www.huaying.info/statics/qr/teacher2018/'
+      localGoodsPicUrl: 'https://www.huaying.info/statics/images/hyteacher2018/img1.gif',
+      localQrCodeUrl: 'https://www.huaying.info/statics/images/hyteacher2018/gh-258.jpg'
     }
 
     computed = {
@@ -177,11 +179,11 @@
         }
       },
       onDownShareImage() {
-        this.drawImage(
+        this.funcDrawImage(
           function(res) {
-            //保存到本地相册
-            wepy.saveImageToPhotosAlbum( {
-              filePath: res.tempFilePath,
+            // 保存到本地相册
+            wepy.saveImageToPhotosAlbum({
+              filePath: res.tempFilePath
             })
           })
       },
@@ -371,48 +373,42 @@
       wepy.getSystemInfo({
         success: function (res) {
           rpx = res.windowWidth / 375
-        },
+        }
       })
       // 创建 canvas 绘图上下文(指定 canvasId)
-      const s = wx.createCanvasContext("canvas")
+      const s = wepy.createCanvasContext('mycanvas')
       // //背景
       s.rect(0, 0, 265 * rpx, 405 * rpx)
       s.setFillStyle('white')
       s.fill()
-      // itemName
-      s.setFillStyle('#4A4A4A')
-      s.setFontSize("14")
-      s.setTextAlign('left')
-      s.fillText(that.data.itemName, 16 * rpx, 307 * rpx, 154 * rpx)
-      // price
-      s.setFillStyle('#C8121A')
-      s.setFontSize("18")
-      s.setTextAlign('left')
-      s.fillText(`￥${that.data.salePriceStr}`, 16 * rpx, 345 * rpx, 154 * rpx)
       // 商品图片 (在画布上绘制图像)
-      s.drawImage(goodsPicUrl, 0, 0, 265 * rpx, 262.5 * rpx)
+      s.drawImage(goodsPicUrl, 0, 0, 265 * rpx, 265 * rpx)
       // 小程序码
       s.drawImage(qrCodeUrl, 175 * rpx, 275 * rpx, 80 * rpx, 80 * rpx)
       s.draw(false, function () {
+        console.log(' ?? ')
         // 把当前画布指定区域的内容导出生成指定大小的图片，并返回文件路径
         wepy.canvasToTempFilePath({
-          canvasId: 'canvas',
+          canvasId: 'mycanvas',
           x: 0,
           y: 0,
           width: 530 * rpx,
           height: 816 * rpx,
           success: function (res) {
+            console.log(res.tempFilePath)
             // wepy.previewImage({
-            //   current: res.tempFilePath, // 当前显示图片的http链接
-            //   urls: [res.tempFilePath] // 需要预览的图片http链接列表
+              // 当前显示图片的http链接
+              // current: res.tempFilePath,
+              // 需要预览的图片http链接列表
+              // urls: [res.tempFilePath]
             // })
-            callback(res)
-
+            // callback(res)
           },
-
+          error: function (res) {
+            console.log(res)
+          }
         }, this)
-      });
+      })
     }
-
   }
 </script>
