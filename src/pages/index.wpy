@@ -4,27 +4,28 @@
   <view class="container">
     <panel>
       <view class="content" slot="content" style="background-image: url({{pBackgroundImg}})">
+        <view class="content-div" style="">
+          <view @tap="prevQuestion" class="btn-prev-question" size="mini" style="top: {{btnPrevPosition}}%;"></view>
+          <view @tap="nextQuestion" class="btn-next-question" size="mini" style="height: {{btnNextHeight}}%; top: {{btnNextPosition}}%;"></view>
+          <view class="clearfix m-teacher" style="display: {{inputTeacherDisplay}}; height: {{inputTeacherNameHeight}}%; top: {{inputTeacherNameTop}}%;">
+            <input type="text" name="teachername" class="teacher-input" maxlength="8" @input="bindTextTeacherName" />
+          </view>
+          <view class="clearfix m-teacher" style="display: {{inputTeacherDisplay}}; height: {{inputTeacherWordHeight}}%; top: {{inputTeacherWordTop}}%;">
+            <textarea placeholder="如：你们都看好我要变形了" name="teacherword" maxlength="52" @input="bindTextTeacherWord" />
+          </view>
 
-        <view @tap="prevQuestion" class="btn-prev-question" size="mini" style="top: {{btnPrevPosition}}%;"></view>
-        <view @tap="nextQuestion" class="btn-next-question" size="mini" style="height: {{btnNextHeight}}%; top: {{btnNextPosition}}%;"></view>
-        <view class="clearfix m-teacher" style="display: {{inputTeacherDisplay}}; height: {{inputTeacherNameHeight}}%; top: {{inputTeacherNameTop}}%;">
-          <input type="text" name="teachername" class="teacher-input" maxlength="8" @input="bindTextTeacherName" />
+          <view class="clearfix m-student" style="display: {{inputStudentDisplay}}; height: {{inputStudentNameHeight}}%; top: {{inputStudentNameTop}}%;">
+            <input type="text" name="studentname" class="teacher-input" maxlength="8" @input="bindTextStudentName" />
+          </view>
+          <view class="clearfix m-student" style="display: {{inputStudentDisplay}}; height: {{inputCellphoneHeight}}%; top: {{inputCellphoneTop}}%;">
+            <input type="text" name="cellphone" class="teacher-input" maxlength="14" @input="bindTextCellphone" />
+          </view>
+          <view class="clearfix m-student" style="display: {{inputStudentDisplay}}; height: {{inputSchoolHeight}}%; top: {{inputSchoolTop}}%;">
+            <input type="text" name="school" class="teacher-input" maxlength="30" @input="bindTextSchool" />
+          </view>
+          <button class="btn-next-start" open-type="getUserInfo" lang="zh_CN" bindgetuserinfo="onGotUserInfo" style="height: 16%; top: 79%; display: {{getUserInfoDisplay}}"></button>
+          <button class="btn-submit" @tap="toast" size="mini" hover-class="btn-hover" style="display: {{inputStudentDisplay}}; top: {{btnSubmitTop}}%;"></button>
         </view>
-        <view class="clearfix m-teacher" style="display: {{inputTeacherDisplay}}; height: {{inputTeacherWordHeight}}%; top: {{inputTeacherWordTop}}%;">
-          <textarea placeholder="如：你们都看好我要变形了" name="teacherword" maxlength="52" @input="bindTextTeacherWord" />
-        </view>
-
-        <view class="clearfix m-student" style="display: {{inputStudentDisplay}}; height: {{inputStudentNameHeight}}%; top: {{inputStudentNameTop}}%;">
-          <input type="text" name="studentname" class="teacher-input" maxlength="8" @input="bindTextStudentName" />
-        </view>
-        <view class="clearfix m-student" style="display: {{inputStudentDisplay}}; height: {{inputCellphoneHeight}}%; top: {{inputCellphoneTop}}%;">
-          <input type="text" name="cellphone" class="teacher-input" maxlength="14" @input="bindTextCellphone" />
-        </view>
-        <view class="clearfix m-student" style="display: {{inputStudentDisplay}}; height: {{inputSchoolHeight}}%; top: {{inputSchoolTop}}%;">
-          <input type="text" name="school" class="teacher-input" maxlength="30" @input="bindTextSchool" />
-        </view>
-        <button class="btn-next-start" open-type="getUserInfo" lang="zh_CN" bindgetuserinfo="onGotUserInfo" style="height: 16%; top: 79%; display: {{getUserInfoDisplay}}"></button>
-        <button class="btn-submit" @tap="toast" size="mini" hover-class="btn-hover" style="display: {{inputStudentDisplay}}; top: {{btnSubmitTop}}%;"></button>
       </view>
     </panel>
     <toast />
@@ -194,11 +195,25 @@
 
     onLoad() {
       this.funcChangeImg(1)
+      var that = this
+      // 获取系统信息
+      wepy.getSystemInfo({
+        success: function (res) {
+          // 可使用窗口宽度、高度
+          console.log('height=' + res.windowHeight)
+          console.log('width=' + res.windowWidth)
+          // 计算主体部分高度,单位为px
+          that.setData({
+            // second部分高度 = 利用窗口可使用高度 - first部分高度（这里的高度单位为px，所有利用比例将300rpx转换为px）
+            second_height: res.windowHeight - res.windowWidth / 750 * 300
+          })
+        }
+      })
     }
     funcChangeImg(i) {
       let self = this
-      var nextTop = 100
-      var prevtop = 100
+      var nextTop = 200
+      var prevtop = 200
       var nextHeight = 20
       var iTeachDisplay = 'none'
       var iTeacherNameTop = 0
@@ -206,15 +221,15 @@
       var iTeacherWordTop = 0
       var iTeacherWordHeight = 0
       var iStuDisplay = 'none'
-      var iStudentNameTop = 100
+      var iStudentNameTop = 200
       var iStudentNameHeight = 4
-      var iCellphoneTop = 100
+      var iCellphoneTop = 200
       var iCellphoneHeight = 4
-      var iSchoolTop = 100
+      var iSchoolTop = 200
       var iSchoolHeight = 4
-      var submitTop = 100
+      var submitTop = 200
       if (i === 1) {
-        nextTop = 100
+        nextTop = 200
         nextHeight = 15
       } else if (i === 2) {
         nextTop = 54
@@ -244,7 +259,7 @@
         iTeacherWordHeight = 9.2
       } else if (i === 12) {
         prevtop = 92
-        nextTop = 100
+        nextTop = 200
         submitTop = 66.5
         iStuDisplay = ''
         iStudentNameTop = 48
@@ -254,10 +269,10 @@
         iSchoolTop = 60
         iSchoolHeight = 4
       } else {
-        nextTop = 100
+        nextTop = 200
         nextHeight = 12
       }
-      var bgImg = 'https://www.huaying.info/statics/images/hyteacher2018/' + i + '.gif'
+      var bgImg = 'https://www.huaying.info/statics/images/hyteacher2018/img' + i + '.gif'
       self.canClick = false
       self.setData({
         pBackgroundImg: bgImg,
