@@ -25,6 +25,7 @@
           </view>
           <button class="btn-next-start" open-type="getUserInfo" lang="zh_CN" bindgetuserinfo="onGotUserInfo" style="height: 16%; top: 79%; display: {{getUserInfoDisplay}}"></button>
           <button class="btn-submit" @tap="toast" size="mini" hover-class="btn-hover" style="display: {{inputStudentDisplay}}; top: {{btnSubmitTop}}%;"></button>
+          <button class="xxx" @tap="onDownShareImage"></button>
         </view>
       </view>
     </panel>
@@ -82,36 +83,38 @@
         avatarUrl: ''
       },
       auth: '63bef7f4-0e05-58ab-24f4-113dcd379dd3',
-      handleurl: 'https://www.huaying.info/Home/Index/hyTeacherHandle.html'
+      handleurl: 'https://www.huaying.info/Home/Index/hyTeacherHandle.html',
+      localGoodsPicUrl: '',
+      localQrCodeUrl: 'https://www.huaying.info/statics/qr/teacher2018/'
     }
 
     computed = {
-      now () {
+      now() {
         return +new Date()
       }
     }
 
     methods = {
-      bindTextTeacherName (e) {
+      bindTextTeacherName(e) {
         this.valTeacherName = e.detail.value
       },
-      bindTextTeacherWord (e) {
+      bindTextTeacherWord(e) {
         this.valTeacherWord = e.detail.value
       },
-      bindTextStudentName (e) {
+      bindTextStudentName(e) {
         this.valStudentName = e.detail.value
       },
-      bindTextCellphone (e) {
+      bindTextCellphone(e) {
         this.valCellphone = e.detail.value
       },
-      bindTextSchool (e) {
+      bindTextSchool(e) {
         this.valSchool = e.detail.value
       },
-      prevQuestion (e) {
+      prevQuestion(e) {
         this.index = 11
         this.funcChangeImg(this.index)
       },
-      nextQuestion (e) {
+      nextQuestion(e) {
         if (this.index <= 12 && this.canClick) {
           if (this.index === 11) {
             this.goNext = false
@@ -137,7 +140,7 @@
           if (this.goNext) {
             this.index++
             if (this.index === 7) {
-              var numPool = [ 7, 8, 9, 10 ]
+              var numPool = [7, 8, 9, 10]
               this.index = numPool[Math.floor(Math.random() * numPool.length)]
             } else if (this.index > 7 && this.index <= 10) {
               this.index = 11
@@ -146,14 +149,14 @@
           }
         }
       },
-      onGotUserInfo (e) {
+      onGotUserInfo(e) {
         this.userInfo.nickName = e.detail.userInfo.nickName
         this.userInfo.avatarUrl = e.detail.userInfo.avatarUrl
         this.index++
         this.funcChangeImg(this.index)
         this.getUserInfoDisplay = 'none'
       },
-      toast () {
+      toast() {
         if (this.valStudentName !== '' && this.valCellphone !== '') {
           this.funcStudentRequest(this.valStudentName, this.valCellphone, this.valSchool)
           let promise = this.$invoke('toast', 'show', {
@@ -173,7 +176,16 @@
           })
         }
       },
-      onShareAppMessage (res) {
+      onDownShareImage() {
+        this.drawImage(
+          function(res) {
+            //保存到本地相册
+            wepy.saveImageToPhotosAlbum( {
+              filePath: res.tempFilePath,
+            })
+          })
+      },
+      onShareAppMessage(res) {
         if (res.from === 'button') {
           // 来自页面内转发按钮
           console.log(res.target)
@@ -219,6 +231,7 @@
         }
       })
     }
+
     funcChangeImg(i) {
       let self = this
       var nextTop = 200
@@ -282,6 +295,9 @@
         nextHeight = 12
       }
       var bgImg = 'https://www.huaying.info/statics/images/hyteacher2018/img' + i + '.gif'
+      if (i >= 7 && i <= 10) {
+        self.data.localGoodsPicUrl = bgImg
+      }
       self.canClick = false
       self.setData({
         pBackgroundImg: bgImg,
@@ -312,10 +328,10 @@
     funcTeacherRequest(a, b) {
       let self = this
       wepy.request({
-        header: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        header: {'Content-Type': 'application/x-www-form-urlencoded'},
         url: this.handleurl,
         method: 'POST',
-        data: { auth: this.auth, times: this.times, type: 'teacher', nickname: this.userInfo.nickName, avatarurl: this.userInfo.avatarUrl, name: a, word: b },
+        data: {auth: this.auth, times: this.times, type: 'teacher', nickname: this.userInfo.nickName, avatarurl: this.userInfo.avatarUrl, name: a, word: b},
         success: function (d) {
           if (d.data.ret === 'success') {
             self.pk = d.data.pk
@@ -329,10 +345,10 @@
 
     funcStudentRequest(a, b, c) {
       wepy.request({
-        header: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        header: {'Content-Type': 'application/x-www-form-urlencoded'},
         url: this.handleurl,
         method: 'POST',
-        data: { auth: this.auth, times: this.times, type: 'student', nickname: this.userInfo.nickName, avatarurl: this.userInfo.avatarUrl, pk: this.pk, studentname: a, cellphone: b, school: c },
+        data: {auth: this.auth, times: this.times, type: 'student', nickname: this.userInfo.nickName, avatarurl: this.userInfo.avatarUrl, pk: this.pk, studentname: a, cellphone: b, school: c},
         success: function (d) {
           console.log(d.data)
           if (d.data.ret === 'success') {
@@ -343,5 +359,60 @@
         }
       })
     }
+
+    // 绘制分享图片
+    funcDrawImage() {
+      var that = this
+      // 换本地路径
+      var goodsPicUrl = that.data.localGoodsPicUrl
+      var qrCodeUrl = that.data.localQrCodeUrl
+      var rpx
+      // 获取屏幕宽度，获取自适应单位
+      wepy.getSystemInfo({
+        success: function (res) {
+          rpx = res.windowWidth / 375
+        },
+      })
+      // 创建 canvas 绘图上下文(指定 canvasId)
+      const s = wx.createCanvasContext("canvas")
+      // //背景
+      s.rect(0, 0, 265 * rpx, 405 * rpx)
+      s.setFillStyle('white')
+      s.fill()
+      // itemName
+      s.setFillStyle('#4A4A4A')
+      s.setFontSize("14")
+      s.setTextAlign('left')
+      s.fillText(that.data.itemName, 16 * rpx, 307 * rpx, 154 * rpx)
+      // price
+      s.setFillStyle('#C8121A')
+      s.setFontSize("18")
+      s.setTextAlign('left')
+      s.fillText(`￥${that.data.salePriceStr}`, 16 * rpx, 345 * rpx, 154 * rpx)
+      // 商品图片 (在画布上绘制图像)
+      s.drawImage(goodsPicUrl, 0, 0, 265 * rpx, 262.5 * rpx)
+      // 小程序码
+      s.drawImage(qrCodeUrl, 175 * rpx, 275 * rpx, 80 * rpx, 80 * rpx)
+      s.draw(false, function () {
+        // 把当前画布指定区域的内容导出生成指定大小的图片，并返回文件路径
+        wepy.canvasToTempFilePath({
+          canvasId: 'canvas',
+          x: 0,
+          y: 0,
+          width: 530 * rpx,
+          height: 816 * rpx,
+          success: function (res) {
+            // wepy.previewImage({
+            //   current: res.tempFilePath, // 当前显示图片的http链接
+            //   urls: [res.tempFilePath] // 需要预览的图片http链接列表
+            // })
+            callback(res)
+
+          },
+
+        }, this)
+      });
+    }
+
   }
 </script>
