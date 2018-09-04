@@ -4,8 +4,8 @@
   <view class="container">
     <panel>
       <view class="content" slot="content" style="background-image: url({{pBackgroundImg}})">
-        <view class="content-div" style="">
-          <view @tap="prevQuestion" class="btn-prev-question" size="mini" style="top: {{btnPrevPosition}}%;"></view>
+        <view class="content-div" style="height:{{contentDivHeight}}px; top:{{contentDivTop}}px; bottom:{{contentDivTop}}px; ">
+          <view @tap="prevQuestion" class="btn-prev-question" size="mini" style="top:{{btnPrevPosition}}%;"></view>
           <view @tap="nextQuestion" class="btn-next-question" size="mini" style="height: {{btnNextHeight}}%; top: {{btnNextPosition}}%;"></view>
           <view class="clearfix m-teacher" style="display: {{inputTeacherDisplay}}; height: {{inputTeacherNameHeight}}%; top: {{inputTeacherNameTop}}%;">
             <input type="text" name="teachername" class="teacher-input" maxlength="8" @input="bindTextTeacherName" />
@@ -195,7 +195,7 @@
 
     onLoad() {
       this.funcChangeImg(1)
-      var that = this
+      let that = this
       // 获取系统信息
       wepy.getSystemInfo({
         success: function (res) {
@@ -203,10 +203,19 @@
           console.log('height=' + res.windowHeight)
           console.log('width=' + res.windowWidth)
           // 计算主体部分高度,单位为px
-          that.setData({
-            // second部分高度 = 利用窗口可使用高度 - first部分高度（这里的高度单位为px，所有利用比例将300rpx转换为px）
-            second_height: res.windowHeight - res.windowWidth / 750 * 300
-          })
+          if (res.windowHeight > 700) {
+            that.setData({
+              // second部分高度 = 利用窗口可使用高度 - first部分高度（这里的高度单位为px，所有利用比例将300rpx转换为px）
+              // second_height: res.windowHeight - res.windowWidth / 750 * 300
+              contentDivTop: 60,
+              contentDivHeight: 600
+            })
+          } else {
+            that.setData({
+              contentDivTop: 0,
+              contentDivHeight: res.windowHeight
+            })
+          }
         }
       })
     }
