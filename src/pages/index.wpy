@@ -297,7 +297,7 @@
           btnNextPosition: nextTop
         })
         self.canClick = true
-      }, 1000)
+      }, 600)
     }
 
     funcTeacherRequest(a, b) {
