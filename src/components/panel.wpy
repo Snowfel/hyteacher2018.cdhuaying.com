@@ -59,8 +59,8 @@
         }
         .m-student {
           position: absolute;
-          left: 34%;
-          right:29%;
+          left: 41%;
+          right:21%;
           input {
             font-size: 28rpx;
           }
@@ -78,9 +78,9 @@
         }
         .down-image {
           border: none;
-          width: 38%;
-          left: 44.5%;
-          height: 5%;
+          width: 22%;
+          left: 40%;
+          height: 6%;
           position: absolute;
           background:none;
         }
