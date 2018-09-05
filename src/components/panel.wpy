@@ -67,14 +67,22 @@
         }
         .btn-submit {
           border: none;
-          width: 22%;
-          left: 52.5%;
+          width: 38%;
+          left: 44.5%;
           height: 5%;
           position: absolute;
           background:none;
         }
         .btn-hover {
           background-color: #fdae55;
+        }
+        .down-image {
+          border: none;
+          width: 38%;
+          left: 44.5%;
+          height: 5%;
+          position: absolute;
+          background:none;
         }
         button::after {
           border: 0;

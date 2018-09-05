@@ -25,8 +25,7 @@
           </view>
           <button class="btn-next-start" open-type="getUserInfo" lang="zh_CN" bindgetuserinfo="onGotUserInfo" style="height: 16%; top: 79%; display: {{getUserInfoDisplay}}"></button>
           <button class="btn-submit" @tap="toast" size="mini" hover-class="btn-hover" style="display: {{inputStudentDisplay}}; top: {{btnSubmitTop}}%;"></button>
-          <image class="img" src="{{pShareImage}}"></image>
-          <view class="save" hidden="{{maskHidden}}" @tap="onDownShareImage">点击保存图片</view>
+          <view class="down-image" @tap="onDownShareImage" style="display: {{downImageDisplay}}; top: {{downImageTop}}%;">点击保存图片</view>
         </view>
       </view>
     </panel>
@@ -85,7 +84,7 @@
       },
       auth: '63bef7f4-0e05-58ab-24f4-113dcd379dd3',
       handleurl: 'https://www.huaying.info/Home/Index/hyTeacherHandle.html',
-      pShareImg: ''
+      pShareIndex: 0
     }
 
     computed = {
@@ -115,7 +114,7 @@
         this.funcChangeImg(this.index)
       },
       nextQuestion(e) {
-        if (this.index <= 12 && this.canClick) {
+        if (this.index <= 13 && this.canClick) {
           if (this.index === 11) {
             this.goNext = false
             if (this.valTeacherName !== '' && this.valTeacherWord !== '') {
@@ -139,10 +138,9 @@
           }
           if (this.goNext) {
             this.index++
-            if (this.index === 7) {
-              var numPool = [7, 8, 9, 10]
-              this.index = numPool[Math.floor(Math.random() * numPool.length)]
-            } else if (this.index > 7 && this.index <= 10) {
+            if (this.index === 2) {
+              console.log('hahah')
+            } else if (this.index === 7) { // 当答题结束，跳转到填写信息页面
               this.index = 11
             }
             this.funcChangeImg(this.index)
@@ -165,6 +163,8 @@
           })
           promise.then((d) => {
             console.log('提示：你的信息提交成功！')
+            this.index = 13
+            this.funcChangeImg(this.index)
           })
         } else {
           let promise2 = this.$invoke('toast', 'show', {
@@ -177,9 +177,9 @@
         }
       },
       onDownShareImage() {
-        console.log('res:' + this.pShareImg)
+        console.log('res:' + this.pShareIndex)
         wepy.getImageInfo({
-          src: this.pShareImg,
+          src: 'https://www.huaying.info/statics/images/hyteacher2018/share' + this.pShareIndex + '.png',
           success: function (ret) {
             var path = ret.path
             wepy.saveImageToPhotosAlbum({
@@ -212,21 +212,24 @@
     }
 
     onLoad() {
-      this.funcChangeImg(1)
       let that = this
+      that.funcChangeImg(1)
+      var numPool = [7, 8, 9, 10]
+      that.pShareIndex = numPool[Math.floor(Math.random() * numPool.length)]
       // 获取系统信息
       wepy.getSystemInfo({
         success: function (res) {
           // 可使用窗口宽度、高度
           console.log('height=' + res.windowHeight)
           console.log('width=' + res.windowWidth)
+          var mainHeight = (1008 * res.windowWidth) / 640
           // 计算主体部分高度,单位为px
-          if (res.windowHeight > 700) {
+          if (res.windowHeight > mainHeight) {
             that.setData({
               // second部分高度 = 利用窗口可使用高度 - first部分高度（这里的高度单位为px，所有利用比例将300rpx转换为px）
               // second_height: res.windowHeight - res.windowWidth / 750 * 300
-              contentDivTop: 60,
-              contentDivHeight: 600
+              contentDivTop: (res.windowHeight - mainHeight) / 2,
+              contentDivHeight: mainHeight
             })
           } else {
             that.setData({
@@ -242,7 +245,7 @@
       let self = this
       var nextTop = 200
       var prevtop = 200
-      var nextHeight = 20
+      var nextHeight = 0
       var iTeachDisplay = 'none'
       var iTeacherNameTop = 0
       var iTeacherNameHeight = 0
@@ -256,7 +259,10 @@
       var iSchoolTop = 200
       var iSchoolHeight = 4
       var submitTop = 200
-      var shareImg = self.pShareImg
+      var downDisplay = 'none'
+      var downTop = 200
+      var shareIndex = 0
+      var bgImg = 'https://www.huaying.info/statics/images/hyteacher2018/img' + i + '.gif'
       if (i === 1) {
         nextTop = 200
         nextHeight = 15
@@ -278,7 +284,6 @@
       } else if (i >= 7 && i <= 10) {
         nextTop = 79
         nextHeight = 12
-        shareImg = 'https://www.huaying.info/statics/images/hyteacher2018/share' + i + '.png' // 出结果后，保存结果图片地址
       } else if (i === 11) {
         nextTop = 82
         nextHeight = 11
@@ -290,26 +295,26 @@
       } else if (i === 12) {
         prevtop = 92
         nextTop = 200
-        submitTop = 66.5
+        submitTop = 72.5
         iStuDisplay = ''
-        iStudentNameTop = 48
+        iStudentNameTop = 54
         iStudentNameHeight = 4
-        iCellphoneTop = 54
+        iCellphoneTop = 60
         iCellphoneHeight = 4
-        iSchoolTop = 60
+        iSchoolTop = 66
         iSchoolHeight = 4
+      } else if (i === 13) {
+        nextTop = 200
+        nextHeight = 0
+        downDisplay = ''
+        downTop = 72
+        shareIndex = self.pShareIndex
+        bgImg = 'https://www.huaying.info/statics/images/hyteacher2018/img' + shareIndex + '.gif'
       } else {
         nextTop = 200
-        nextHeight = 12
+        nextHeight = 0
       }
-      var bgImg = 'https://www.huaying.info/statics/images/hyteacher2018/img' + i + '.gif'
-      if (i === 12) {
-        self.setData({
-          pShareImage: self.pShareImg
-        })
-      }
-      console.log('shareImg:' + shareImg)
-      self.pShareImg = shareImg
+      console.log('shareIndex:' + shareIndex)
       self.canClick = false
       self.setData({
         pBackgroundImg: bgImg,
@@ -327,7 +332,9 @@
         inputCellphoneHeight: iCellphoneHeight,
         inputSchoolTop: iSchoolTop,
         inputSchoolHeight: iSchoolHeight,
-        btnSubmitTop: submitTop
+        btnSubmitTop: submitTop,
+        downImageDisplay: downDisplay,
+        downImagetop: downTop
       })
       setTimeout(() => {
         self.setData({
@@ -369,58 +376,6 @@
             return false
           }
         }
-      })
-    }
-
-    // 绘制分享图片
-    funcDrawImage() {
-      return new Promise((resolve, reject) => {
-        var that = this
-        // 换本地路径
-        var goodsPicUrl = that.data.localGoodsPicUrl
-        var qrCodeUrl = that.data.localQrCodeUrl
-        var rpx
-        // 获取屏幕宽度，获取自适应单位
-        wepy.getSystemInfo({
-          success: function (res) {
-            rpx = res.windowWidth / 375
-          }
-        })
-        // 创建 canvas 绘图上下文(指定 canvasId)
-        const s = wepy.createCanvasContext('mycanvas')
-        // //背景
-        s.rect(0, 0, 265 * rpx, 405 * rpx)
-        s.setFillStyle('white')
-        s.fill()
-        // 商品图片 (在画布上绘制图像)
-        s.drawImage(goodsPicUrl, 0, 0, 265 * rpx, 265 * rpx)
-        // 小程序码
-        s.drawImage(qrCodeUrl, 175 * rpx, 275 * rpx, 80 * rpx, 80 * rpx)
-        s.draw(false, function () {
-          // console.log(' ?? ')
-          // 把当前画布指定区域的内容导出生成指定大小的图片，并返回文件路径
-          wepy.canvasToTempFilePath({
-            canvasId: 'mycanvas',
-            x: 0,
-            y: 0,
-            width: 530 * rpx,
-            height: 816 * rpx,
-            success: function (res) {
-              console.log(res.tempFilePath)
-              // wepy.previewImage({
-              // 当前显示图片的http链接
-              // current: res.tempFilePath,
-              // 需要预览的图片http链接列表
-              // urls: [res.tempFilePath]
-              // })
-              // resolve(res)
-              resolve(res.tempFilePath)
-            },
-            error: function (res) {
-              console.log(res)
-            }
-          }, this)
-        })
       })
     }
   }
