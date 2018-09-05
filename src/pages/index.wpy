@@ -114,6 +114,7 @@
         this.funcChangeImg(this.index)
       },
       nextQuestion(e) {
+        this.nextTop = 200
         if (this.index <= 13 && this.canClick) {
           if (this.index === 11) {
             this.goNext = false
@@ -185,7 +186,11 @@
             wepy.saveImageToPhotosAlbum({
               filePath: path,
               success(result) {
-                console.log(result)
+                wepy.showToast({
+                  title: '保存成功',
+                  icon: 'success',
+                  duration: 1000
+                })
               }
             })
           }
@@ -341,7 +346,7 @@
           btnNextPosition: nextTop
         })
         self.canClick = true
-      }, 1000)
+      }, 600)
     }
 
     funcTeacherRequest(a, b) {

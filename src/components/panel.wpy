@@ -30,12 +30,11 @@
           width: 80%;
           left: 10%;
           position: absolute;
-          border: 1px solid #f00;
-
+          // border: 1px solid #f00;
         }
         .btn-next-start {
-          //border: none;
-          border: 1px solid #f00;
+          border: none;
+          // border: 1px solid #f00;
           width: 61%;
           left: 22%;
           position: absolute;
